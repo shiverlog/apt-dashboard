@@ -1,0 +1,240 @@
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">대시보드에서 확인 할 수 있는 것들입니다. 부팅 이슈 때문에 일부의 시각화 자료를 넣은 것 입니다. 클릭시 시각화 자료를 확인 할 수 있습니다.</li>
+        </ol>
+        {#차트#}
+        <div class="row">
+            {#영역 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-area me-1"></i>
+                        Area Chart - 영역차트: 시계열 데이터 변화 시각화
+                        <a href="/area_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myAreaChart" width="100%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#막대 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Bar Chart - 막대차트: 항목별로 데이터를 비교
+                        <a href="/bar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myBarChart" width="100%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#선형 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Line Chart - 선형차트: 시간에 따른 변화나 추세를 시각화
+                        <a href="/area_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myLineChart" width="100%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#산포도#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Scatter Plot - 산포도: 두 변수 간의 관계를 시각화
+                        <a href="/scatter_plot_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myScatterChart" width="100%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#원형 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Pie Chart - 원형차트: 항목별 비율을 시각화
+                        <a href="/pie_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myPieChart" width="50%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#레이더 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Radar Chart - 여러 변수를 방사형으로 시각화
+                        <a href="/radar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myRadarChart" width="50%" height="20"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#누적 막대 차트#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-chart-bar"></i>
+                        Stacked Bar Charts - 각 카테고리에 대한 데이터 시각화
+                        <a href="/stacked_bar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myColumnChart" width="100%" height="26"></canvas>
+                    </div>
+                </div>
+            </div>
+            {#타임 라인#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-stream me-1"></i>
+                        Timeline - 1월~12월 주문 프로세스의 순서를 시각화
+                        <a href="/timeline_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                         <div id="myTimeline" style="width:100%; height:230px;"></div>
+                    </div>
+                </div>
+            </div>
+            {#히트맵#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-thermometer-half me-1"></i>
+                        Heatmap - 값을 색상으로 표현하여 데이터 밀도나 빈도를 시각화
+                        <a href="/heatmap_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="myHeatmap" style="width:100%; height:290px;"></div>
+                    </div>
+                </div>
+            </div>
+            {#SQL 통계#}
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        SQL - 주문 통계
+                        <a href="/sql_analysis_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <!-- 통계 정보 -->
+                        <div class="row">
+                            <!-- 총 주문 수 -->
+                            <div class="col-xl-3">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-shopping-cart me-1"></i>
+                                        총 주문 수
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 id="">{{ sql_analysis.total_orders }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 평균 주문 금액 -->
+                            <div class="col-xl-3">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-dollar-sign me-1"></i>
+                                        평균 주문 금액
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 id="">${{ sql_analysis.avg_order_value }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 최고 주문 금액 -->
+                            <div class="col-xl-3">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-trophy me-1"></i>
+                                        최고 주문 금액
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 id="">${{ sql_analysis.highest_order_value }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 최소 주문 금액 -->
+                            <div class="col-xl-3">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-user me-1"></i>
+                                        최소 주문 금액
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 id="">${{ sql_analysis.lowest_order_value }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {#/차트#}
+        </div>
+        {#지도 시각화#}
+        <div class="col-xl-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-globe me-1"></i>
+                    World Map - 세계 구입처 시각화
+                    <a href="/maps_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                </div>
+                <div class="card-body">
+                    <div id="myWorldMap" style="width:100%; height:500px;"></div>
+                </div>
+            </div>
+        </div>
+        {#테이블#}
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                DataTable - 모든 APT 테이블을 시각화
+                <a href="/database_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>TableName</th>
+                            <th>Column</th>
+                            <th>Data Cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for table in table_info %}
+                        <tr>
+                            <td>{{ table.table_name }}</td>
+                            <td>
+                                <ul>
+                                    {% for column in table.columns %}
+                                    <li>{{ column }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>{{ table.data_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {#/시각화#}
+    </div>
+</main>

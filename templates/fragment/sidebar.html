@@ -1,0 +1,111 @@
+<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="sb-sidenav-menu-heading">주피터 노트북</div>
+                <a class="nav-link" href="/jupyter">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Jupyter Notebook
+                </a>
+                <div class="sb-sidenav-menu-heading">인터페이스</div>
+                <a class="nav-link collapsed" href="/interface" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                    Layouts
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="javascript:void(0);" id="toggleDarkMode">Dark Sidebar</a>
+                        <a class="nav-link" href="javascript:void(0);" id="toggleLightMode">Light Sidebar</a>
+                    </nav>
+                </div>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                    Pages
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                            Authentication
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/login">Login</a>
+                                <a class="nav-link" href="/register">Register</a>
+                                <a class="nav-link" href="/password">Forgot Password</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Error
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/error/401">401 Page</a>
+                                <a class="nav-link" href="/error/404">404 Page</a>
+                                <a class="nav-link" href="/error/500">500 Page</a>
+                            </nav>
+                        </div>
+                    </nav>
+                </div>
+                <div class="sb-sidenav-menu-heading">데이터 시각화</div>
+
+                    <a class="nav-link" href="/area_charts_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Area-Charts
+                    </a>
+                    <a class="nav-link" href="/bar_charts_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                        Bar-Charts
+                    </a>
+                    <a class="nav-link" href="/line_charts_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                        Line-Chart
+                    </a>
+                    <a class="nav-link" href="/scatter_plot_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-gantt"></i></div>
+                        Scatter-plot
+                    </a>
+
+                    <a class="nav-link" href="/pie_charts_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-pie"></i></div>
+                        Pie-Chart
+                    </a>
+                    <a class="nav-link" href="/radar_charts_detail">
+                        <div class="sb-nav-link-icon"><i class="fa-brands fa-uncharted"></i></div>
+                        Radar-Chart
+                    </a>
+                    <a class="nav-link" href="/network_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-diagram-project"></i></div>
+                        Stacked Bar Charts
+                    </a>
+                    <a class="nav-link" href="/timeline_detail">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-timeline"></i></div>
+                        Timeline
+                    </a>
+                    <a class="nav-link" href="/heatmap_detail">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-temperature-three-quarters"></i></div>
+                        Heatmap
+                    </a>
+                    <a class="nav-link" href="/sql_analysis_detail">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                        SQL Analysis
+                    </a>
+                    <a class="nav-link" href="/maps_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-map"></i></div>
+                        Maps
+                    </a>
+                    <a class="nav-link" href="/database_detail">
+                        <div class="sb-nav-link-icon"><i class="fas fa-database"></i></div>
+                        Database
+                    </a>
+                </div>
+            </div>
+        <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            APT Admin
+        </div>
+    </nav>
+</div>

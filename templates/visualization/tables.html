@@ -1,0 +1,34 @@
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Database Table Information
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>TableName</th>
+                        <th>Column</th>
+                        <th>Data Cnt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for table_name, column_name in table_column_info %}
+                    <tr>
+                        <td>{{ table_name }}</td>
+                        <td>{{ column_name }}</td>
+                        <td>
+                            {% for table_row in table_row_counts %}
+                                {% if table_row[0] == table_name %}
+                                    {{ table_row[1] }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

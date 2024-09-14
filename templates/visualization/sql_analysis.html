@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+                {% include 'fragment/sidebar.html' %}
+                <div class="container-lg" style="margin-top: 50px;">
+                <h1 style="text-align: center">SQL 통계</h1>
+                    <div class="row">
+                        <!-- 총 주문 수 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-shopping-cart me-1"></i>
+                                    총 주문 수
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.total_orders }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 평균 주문 금액 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    평균 주문 금액
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">${{ sql_analysis.avg_order_value }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 최고 주문 금액 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-dollar-sign me-1"></i>
+                                    최고 주문 금액
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">${{ sql_analysis.highest_order_value }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 최소 주문 금액 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-sort-amount-down me-1"></i>
+                                    최소 주문 금액
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">${{ sql_analysis.lowest_order_value }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- 가장 많은 금액을 주문한 고객 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-user-tie me-1"></i>
+                                    가장 많은 금액을 주문한 고객
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.highest_order_customer.customer_name }}: ${{ sql_analysis.highest_order_customer.total_amount | round(2) }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 가장 많이 주문한 고객 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-user me-1"></i>
+                                    가장 많이 주문한 고객
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.most_orders_customer.customer_name }}: {{ sql_analysis.most_orders_customer.order_count }} 건</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- APT 직원수 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-users me-1"></i>
+                                    APT 직원수
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.total_employees }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 가장 많이 팔린 제품 상위 5개 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-crown me-1"></i>
+                                    가장 많이 팔린 제품 상위 5개
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        {% for product in sql_analysis.top_products %}
+                                            <li>{{ loop.index }}. {{ product.ProductName }} : {{ product.total_sold }}개</li>
+                                        {% else %}
+                                            <li>N/A</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- 최고 매출을 기록한 카테고리 순위 5 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-signal me-1"></i>
+                                    최고 매출 카테고리 상위 5개
+                                </div>
+                                <div class="card-body">
+                                    <ol>
+                                        {% for category in sql_analysis.top_sales_categories %}
+                                            <li>{{ category.CategoryName }}: ${{ category.total_sales | round(2) }}</li>
+                                        {% else %}
+                                            <li>N/A</li>
+                                        {% endfor %}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 각 국가별 총 매출 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-globe me-1"></i>
+                                    각 국가별 총 매출
+                                </div>
+                                <div class="card-body">
+                                    <ol>
+                                        {% for country in sql_analysis.country_sales %}
+                                            <li>{{ country.ShipCountry }}: ${{ country.total_sales | round(2) }}</li>
+                                        {% else %}
+                                            <li>N/A</li>
+                                        {% endfor %}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 연도별 매출 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-area me-1"></i>
+                                    연도별 매출
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        {% for year_data in sql_analysis.yearly_sales %}
+                                            <li>{{ year_data.order_year }}: {{ year_data.order_count }}건</li>
+                                        {% else %}
+                                            <li>N/A</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 월별 총 주문 수량 조회 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    2021 월별 총 주문 수량 조회
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        {% for month_data in sql_analysis.monthly_orders %}
+                                            <li>{{ month_data.order_month }}: {{ month_data.total_orders }}건</li>
+                                        {% else %}
+                                            <li>N/A</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- 지연된 배송 목록 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-shipping-fast me-1"></i>
+                                    지연된 배송 수
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.late_shipment_count }}건</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 배송 중인 주문 목록 -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-truck me-1"></i>
+                                    배송 중인 주문 수
+                                </div>
+                                <div class="card-body">
+                                    <h5 id="">{{ sql_analysis.in_transit_orders }}건</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+pip install streamlit pandas numpy seaborn matplotlib altair plotly
+pip install mysql-connector-python pandas
+pip install Flask-Migrate
+pip install Flask-SQLAlchemy
+pip install pymysql
+pip install mysqlclient
+pip install jupyter
+pip install scikit-learn
+pip install lightgbm
+pip install flask-cors
