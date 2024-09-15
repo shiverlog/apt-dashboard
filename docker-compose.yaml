@@ -1,17 +1,17 @@
 #cmd docker-compose.yml 가 있는 위치로 가서 docker-compose up -d
 
-services:
-  mysql:
-    container_name: apt-mysql
-    image: mysql:8.0.30
-    volumes:
-      - ./db/conf.d:/etc/mysql/conf.d
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_DATABASE=apt
-      - MYSQL_USER=apt
-      - MYSQL_PASSWORD=apt!1111
-      - MYSQL_ROOT_PASSWORD=apt!1111
-      - TZ=Asia/Seoul
+#services:
+#  mysql:
+#    container_name: apt-mysql
+#    image: mysql:8.0.30
+#    volumes:
+#      - ./db/conf.d:/etc/mysql/conf.d
+#      - ./db/initdb.d:/docker-entrypoint-initdb.d
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_DATABASE=apt
+#      - MYSQL_USER=apt
+#      - MYSQL_PASSWORD=apt!1111
+#      - MYSQL_ROOT_PASSWORD=apt!1111
+#      - TZ=Asia/Seoul
