@@ -21,21 +21,19 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Username</th>
+                                <th>Password</th>
                                 <th>Email</th>
-                                <th>Role</th>
                                 <th>Created At</th>
-                                <th>Updated At</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for row in admin_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
-                                <td>{{ row[5] }}</td>
+                                <td>{{ row.id }}</td>
+                                <td>{{ row.username }}</td>
+                                <td>{{ row.password }}</td>
+                                <td>{{ row.email }}</td>
+                                <td>{{ row.created_at }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -63,12 +61,12 @@
                         <tbody>
                             {% for row in customer_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
-                                <td>{{ row[5] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['CompanyName'] }}</td>
+                                <td>{{ row['ContactName'] }}</td>
+                                <td>{{ row['ContactTitle'] }}</td>
+                                <td>{{ row['City'] }}</td>
+                                <td>{{ row['Country'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -97,12 +95,12 @@
                         <tbody>
                             {% for row in employee_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
-                                <td>{{ row[5] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['LastName'] }}</td>
+                                <td>{{ row['FirstName'] }}</td>
+                                <td>{{ row['Title'] }}</td>
+                                <td>{{ row['HireDate'] }}</td>
+                                <td>{{ row['Country'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -129,10 +127,10 @@
                         <tbody>
                             {% for row in product_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['ProductName'] }}</td>
+                                <td>{{ row['UnitPrice'] }}</td>
+                                <td>{{ row['UnitsInStock'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -158,9 +156,9 @@
                         <tbody>
                             {% for row in category_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['CategoryName'] }}</td>
+                                <td>{{ row['Description'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -185,8 +183,8 @@
                         <tbody>
                             {% for row in region_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['RegionDescription'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -212,9 +210,9 @@
                         <tbody>
                             {% for row in shipper_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['CompanyName'] }}</td>
+                                <td>{{ row['Phone'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -241,10 +239,10 @@
                         <tbody>
                             {% for row in supplier_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['CompanyName'] }}</td>
+                                <td>{{ row['ContactName'] }}</td>
+                                <td>{{ row['Country'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -270,9 +268,9 @@
                         <tbody>
                             {% for row in territory_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['TerritoryDescription'] }}</td>
+                                <td>{{ row['RegionId'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -298,9 +296,9 @@
                         <tbody>
                             {% for row in employee_territory_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['EmployeeId'] }}</td>
+                                <td>{{ row['TerritoryId'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -325,8 +323,8 @@
                         <tbody>
                             {% for row in order_status_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['StatusName'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -353,11 +351,11 @@
                         <tbody>
                             {% for row in orders_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['CustomerId'] }}</td>
+                                <td>{{ row['EmployeeId'] }}</td>
+                                <td>{{ row['OrderDate'] }}</td>
+                                <td>{{ row['ShipCountry'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -385,11 +383,11 @@
                         <tbody>
                             {% for row in order_detail_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
+                                <td>{{ row['Id'] }}</td>
+                                <td>{{ row['OrderId'] }}</td>
+                                <td>{{ row['ProductId'] }}</td>
+                                <td>{{ row['UnitPrice'] }}</td>
+                                <td>{{ row['Quantity'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -415,9 +413,9 @@
                         <tbody>
                             {% for row in monthly_category_sales_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['mon'] }}</td>
+                                <td>{{ row['CategoryName'] }}</td>
+                                <td>{{ row['TotalSales'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -443,9 +441,9 @@
                         <tbody>
                             {% for row in category_order_cnt_data %}
                             <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
+                                <td>{{ row['ym'] }}</td>
+                                <td>{{ row['CategoryId'] }}</td>
+                                <td>{{ row['OrderCnt'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

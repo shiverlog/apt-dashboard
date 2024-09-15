@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+                <div class="container-lg mt-5">
+                    <h1 class="mb-4">SQL Query Executor</h1>
+
+                    <!-- SQL Query Form -->
+                    <form method="POST" action="/execute_query" class="mb-5">
+                        <div class="mb-3">
+                            <label for="query" class="form-label">Enter your SQL query:</label>
+                            <textarea id="query" name="query" class="form-control" rows="5" placeholder="Write your SQL query here...">{{ request.form.query or '' }}</textarea></div>
+                        <button type="submit" class="btn btn-primary">Execute Query</button>
+                    </form>
+
+                    <!-- Query Result Section -->
+                    {% if result %}
+                        <h2 class="mb-4">Query Result:</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        {% for column in result['columns'] %}
+                                            <th>{{ column }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in result['rows'] %}
+                                        <tr>
+                                            {% for cell in row %}
+                                                <td>{{ cell }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
+    </body>
+</html>

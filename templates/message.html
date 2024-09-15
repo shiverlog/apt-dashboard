@@ -1,36 +1,52 @@
-<div class="col-xl-3 col-md-6">
-    <div class="card bg-primary text-white mb-4">
-        <div class="card-body">Primary Card</div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#">View Details</a>
-            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+                <div class="container-lg">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">Primary Card</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-warning text-white mb-4">
+                            <div class="card-body">Warning Card</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">Success Card</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger text-white mb-4">
+                            <div class="card-body">Danger Card</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% include 'fragment/footer.html' %}
+            </div>
         </div>
-    </div>
-</div>
-<div class="col-xl-3 col-md-6">
-    <div class="card bg-warning text-white mb-4">
-        <div class="card-body">Warning Card</div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#">View Details</a>
-            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-        </div>
-    </div>
-</div>
-<div class="col-xl-3 col-md-6">
-    <div class="card bg-success text-white mb-4">
-        <div class="card-body">Success Card</div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#">View Details</a>
-            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-        </div>
-    </div>
-</div>
-<div class="col-xl-3 col-md-6">
-    <div class="card bg-danger text-white mb-4">
-        <div class="card-body">Danger Card</div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#">View Details</a>
-            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-        </div>
-    </div>
-</div>
+    </body>
+</html>
+

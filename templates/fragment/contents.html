@@ -2,7 +2,9 @@
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">대시보드에서 확인 할 수 있는 것들입니다. 부팅 이슈 때문에 일부의 시각화 자료를 넣은 것 입니다. 클릭시 시각화 자료를 확인 할 수 있습니다.</li>
+            <li class="breadcrumb-item active">
+                대시보드에서 확인 할 수 있는 것들입니다. 부팅 이슈 때문에 일부의 시각화 자료를 넣은 것 입니다. 자세히 보기 클릭시 시각화 자료를 확인 할 수 있습니다.
+            </li>
         </ol>
         {#차트#}
         <div class="row">
@@ -12,7 +14,7 @@
                     <div class="card-header">
                         <i class="fas fa-chart-area me-1"></i>
                         Area Chart - 영역차트: 시계열 데이터 변화 시각화
-                        <a href="/area_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/area_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myAreaChart" width="100%" height="20"></canvas>
@@ -25,7 +27,7 @@
                     <div class="card-header">
                         <i class="fas fa-chart-bar me-1"></i>
                         Bar Chart - 막대차트: 항목별로 데이터를 비교
-                        <a href="/bar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/bar_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myBarChart" width="100%" height="20"></canvas>
@@ -38,7 +40,7 @@
                     <div class="card-header">
                         <i class="fas fa-chart-bar me-1"></i>
                         Line Chart - 선형차트: 시간에 따른 변화나 추세를 시각화
-                        <a href="/area_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/line_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myLineChart" width="100%" height="20"></canvas>
@@ -64,7 +66,7 @@
                     <div class="card-header">
                         <i class="fas fa-chart-bar me-1"></i>
                         Pie Chart - 원형차트: 항목별 비율을 시각화
-                        <a href="/pie_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/pie_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myPieChart" width="50%" height="20"></canvas>
@@ -77,7 +79,7 @@
                     <div class="card-header">
                         <i class="fas fa-chart-bar me-1"></i>
                         Radar Chart - 여러 변수를 방사형으로 시각화
-                        <a href="/radar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/radar_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myRadarChart" width="50%" height="20"></canvas>
@@ -90,7 +92,7 @@
                     <div class="card-header">
                         <i class="fa-solid fa-chart-bar"></i>
                         Stacked Bar Charts - 각 카테고리에 대한 데이터 시각화
-                        <a href="/stacked_bar_chart_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
+                        <a href="/stacked_bar_charts_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                     </div>
                     <div class="card-body">
                         <canvas id="myColumnChart" width="100%" height="26"></canvas>
@@ -138,11 +140,13 @@
                             <div class="col-xl-3">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-shopping-cart me-1"></i>
-                                        총 주문 수
+                                        <small>
+                                            <i class="fas fa-shopping-cart me-1"></i>
+                                            총 주문 수
+                                        </small>
                                     </div>
                                     <div class="card-body">
-                                        <h5 id="">{{ sql_analysis.total_orders }}</h5>
+                                        <h6 id="">{{ sql_analysis.total_orders }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -150,11 +154,13 @@
                             <div class="col-xl-3">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-dollar-sign me-1"></i>
-                                        평균 주문 금액
+                                        <small>
+                                            <i class="fas fa-dollar-sign me-1"></i>
+                                            평균주문 금액
+                                        </small>
                                     </div>
                                     <div class="card-body">
-                                        <h5 id="">${{ sql_analysis.avg_order_value }}</h5>
+                                        <h6 id="">${{ sql_analysis.avg_order_value }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -162,11 +168,13 @@
                             <div class="col-xl-3">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-trophy me-1"></i>
-                                        최고 주문 금액
+                                        <small>
+                                            <i class="fas fa-trophy me-1"></i>
+                                            최고주문 금액
+                                        </small>
                                     </div>
                                     <div class="card-body">
-                                        <h5 id="">${{ sql_analysis.highest_order_value }}</h5>
+                                        <h6 id="">${{ sql_analysis.highest_order_value }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -174,11 +182,13 @@
                             <div class="col-xl-3">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-user me-1"></i>
-                                        최소 주문 금액
+                                        <small>
+                                            <i class="fas fa-user me-1"></i>
+                                            최소주문 금액
+                                        </small>
                                     </div>
                                     <div class="card-body">
-                                        <h5 id="">${{ sql_analysis.lowest_order_value }}</h5>
+                                        <h6 id="">${{ sql_analysis.lowest_order_value }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +203,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-globe me-1"></i>
-                    World Map - 세계 구입처 시각화
+                    World Map - 해외직구(선박) 배송건수 시각화
                     <a href="/maps_detail" class="btn btn-sm btn-primary float-end">자세히 보기</a>
                 </div>
                 <div class="card-body">

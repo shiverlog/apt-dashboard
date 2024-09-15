@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+                <div class="container-lg">
+                    <h1>Bar Charts</h1>
+                    {# 막대 차트 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                직원별 처리한 주문 건수 시각화
+                            </div>
+                            <div class="card-body text-end">
+                                <canvas id="employeeOrdersChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                배송사별 발송 건수 시각화
+                            </div>
+                            <div class="card-body">
+                                <canvas id="shipperShipmentsChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                지역별 주문 수량 시각화
+                            </div>
+                            <div class="card-body">
+                                <canvas id="regionOrdersChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                고객 도시별 매출 비교 시각화
+                            </div>
+                            <div class="card-body">
+                                <canvas id="citySalesChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
+
+        <!-- 파스텔 색상 생성 함수 -->
+        <script>
+            function getRandomPastelColor() {
+                // 파스텔 색상을 만들기 위한 RGB 범위를 밝은 쪽으로 제한
+                const r = Math.floor((Math.random() * 127) + 127);  // 127~255 범위의 밝은 색상
+                const g = Math.floor((Math.random() * 127) + 127);
+                const b = Math.floor((Math.random() * 127) + 127);
+                return `rgba(${r}, ${g}, ${b}, 0.6)`;  // 알파값으로 부드러운 투명도 적용
+            }
+
+            // 직원별 처리한 주문 건수 차트
+            var ctx1 = document.getElementById('employeeOrdersChart').getContext('2d');
+            var employeeOrdersColors = Array({{ employee_orders|length }}).fill().map(() => getRandomPastelColor());
+            var employeeOrdersChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: {{ employee_orders|map(attribute='Employee')|list|tojson }},
+                    datasets: [{
+                        label: 'Order Count',
+                        data: {{ employee_orders|map(attribute='OrderCount')|list|tojson }},
+                        backgroundColor: employeeOrdersColors,
+                        borderColor: employeeOrdersColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 배송사별 발송 건수 차트
+            var ctx2 = document.getElementById('shipperShipmentsChart').getContext('2d');
+            var shipperShipmentsColors = Array({{ shipper_shipments|length }}).fill().map(() => getRandomPastelColor());
+            var shipperShipmentsChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: {{ shipper_shipments|map(attribute='Shipper')|list|tojson }},
+                    datasets: [{
+                        label: 'Shipment Count',
+                        data: {{ shipper_shipments|map(attribute='ShipmentCount')|list|tojson }},
+                        backgroundColor: shipperShipmentsColors,
+                        borderColor: shipperShipmentsColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 지역별 주문 수량 차트
+            var ctx3 = document.getElementById('regionOrdersChart').getContext('2d');
+            var regionOrdersColors = Array({{ region_orders|length }}).fill().map(() => getRandomPastelColor());
+            var regionOrdersChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: {{ region_orders|map(attribute='Region')|list|tojson }},
+                    datasets: [{
+                        label: 'Order Count',
+                        data: {{ region_orders|map(attribute='OrderCount')|list|tojson }},
+                        backgroundColor: regionOrdersColors,
+                        borderColor: regionOrdersColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 고객 도시별 매출 비교 차트
+            var ctx4 = document.getElementById('citySalesChart').getContext('2d');
+            var citySalesColors = Array({{ city_sales|length }}).fill().map(() => getRandomPastelColor());
+            var citySalesChart = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: {{ city_sales|map(attribute='City')|list|tojson }},
+                    datasets: [{
+                        label: 'Total Sales',
+                        data: {{ city_sales|map(attribute='TotalSales')|list|tojson }},
+                        backgroundColor: citySalesColors,
+                        borderColor: citySalesColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

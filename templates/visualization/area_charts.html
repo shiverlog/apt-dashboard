@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+            <div class="container-lg">
+            <h1>Area Charts</h1>
+                <!-- 카테고리 선택 폼 -->
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <form method="POST" action="/area_charts_detail" id="categoryForm">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area me-1"></i>
+                                카테고리 별 월별 매출 Area Charts로 시각화
+                            </div>
+                            <div class="card-body text-end">
+                                <div class="d-inline-flex align-items-center">
+                                   <label for="category" class="form-label me-2">Select a category:</label>
+                                   <select id="category" name="category" class="form-select w-50" onchange="document.getElementById('categoryForm').submit();">
+                                      <option value="all" {% if selected_category == 'all' %}selected{% endif %}>All Categories</option>
+                                      {% for category in categories %}
+                                      <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
+                                      {% endfor %}
+                                   </select>
+                                </div>
+                                {% if chart_data %}
+                                <div class="card-body">
+                                    <canvas id="myAllAreaCharts" width="100%" height="30"></canvas>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
 
-</body>
+        {% if chart_data %}
+        <script>
+            // 차트 데이터를 렌더링
+            var ctxArea = document.getElementById("myAllAreaCharts").getContext("2d");
+            var selectedCategory = "{{ selected_category }}";  // 선택된 카테고리
+            var chartData = {
+                labels: {{ chart_data['labels'] | tojson }},
+                datasets: [{
+                    label: selectedCategory === 'all' ? "Total Sales" : `Total Sales for ${selectedCategory}`,  // 선택된 카테고리에 따른 label 동적 설정
+                    data: {{ chart_data['values'] | tojson }},
+                    fill: true,
+                    backgroundColor: "rgba(75,192,192,0.4)",
+                    borderColor: "rgba(75,192,192,1)"
+                }]
+            };
+
+            new Chart(ctxArea, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    family: 'Arial'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        </script>
+        {% endif %}
+    </body>
 </html>

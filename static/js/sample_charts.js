@@ -1,3 +1,4 @@
+// TAble
 window.addEventListener('DOMContentLoaded', event => {
     // Simple-DataTables
     // https://github.com/fiduswriter/Simple-DataTables/wiki
@@ -7,7 +8,6 @@ window.addEventListener('DOMContentLoaded', event => {
         new simpleDatatables.DataTable(datatablesSimple);
     }
 });
-
 
 // Area Chart (Chart.js)
 var ctxArea = document.getElementById("myAreaChart").getContext("2d");
@@ -120,14 +120,14 @@ new Chart(ctxPie, {
             label: 'Category Sales',
             data: [104976, 97048, 96814, 96777, 80753, 56465, 48545, 40505],
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',  // Confections
-                'rgba(54, 162, 235, 0.2)',  // Beverages
-                'rgba(255, 206, 86, 0.2)',  // Condiments
-                'rgba(75, 192, 192, 0.2)',  // Seafood
-                'rgba(153, 102, 255, 0.2)', // Dairy Products
-                'rgba(255, 159, 64, 0.2)',  // Grains/Cereals
-                'rgba(199, 199, 199, 0.2)', // Meat/Poultry
-                'rgba(255, 205, 86, 0.2)'   // Produce
+                'rgba(255, 99, 132, 0.8)',  // Confections
+                'rgba(54, 162, 235, 0.8)',  // Beverages
+                'rgba(255, 206, 86, 0.8)',  // Condiments
+                'rgba(75, 192, 192, 0.8)',  // Seafood
+                'rgba(153, 102, 255, 0.8)', // Dairy Products
+                'rgba(255, 159, 64, 0.8)',  // Grains/Cereals
+                'rgba(199, 199, 199, 0.8)', // Meat/Poultry
+                'rgba(255, 205, 86, 0.8)'   // Produce
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -153,9 +153,10 @@ new Chart(ctxPie, {
                 }
             },
             legend: {
+                position: 'right',
                 labels: {
                     font: {
-                        family: 'Arial'  // 폰트 설정
+                        family: 'Arial'
                     }
                 }
             }
@@ -306,7 +307,7 @@ new Chart(ctxRadar, {
         responsive: true,
         plugins: {
             legend: {
-                position: 'top',
+                position: 'right',
                 labels: {
                     font: {
                         family: 'Arial'
@@ -451,7 +452,7 @@ var data = [{
 
 // 레이아웃 설정
 var layout = {
-    title: '나라별 주문 수 시각화',
+    title: '해외직구 배송 도시 별 건 수',
     autosize: true, // 자동 크기 조정
     geo: {
         scope: 'world', // 세계 지도

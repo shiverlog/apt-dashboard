@@ -1,68 +1,147 @@
 <!DOCTYPE html>
-<html lang="utf-8">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pie Chart Example</title>
-    <!-- 부트스트랩 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-chart-pie me-1"></i> Pie Chart Example
+<html lang="en">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+                {% include 'fragment/sidebar.html' %}
+                <div class="container-lg">
+                    <h1>Pie Charts</h1>
+
+                    <!-- 카테고리별 총 매출 원형 차트 -->
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie"></i>
+                                카테고리별 총 매출
+                            </div>
+                            <div class="card-body">
+                                <canvas id="categorySalesPieChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <!-- 캔버스 요소를 사용하여 차트를 그립니다 -->
-                        <canvas id="myPieChart"></canvas>
+
+                    <!-- 월별 매출액 카테고리 차트 -->
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie"></i>
+                                월별 매출액 카테고리 차트
+                            </div>
+                            <div class="card-body">
+                                {% for month, data in sales_data.items() %}
+                                <div style="display:inline-block; width:200px; margin:10px;">
+                                    <canvas id="chart-{{ month }}" width="150" height="150"></canvas>
+                                    <p>{{ month }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% include 'fragment/footer.html' %}
             </div>
         </div>
-    </div>
 
-    <!-- 부트스트랩 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Chart.js를 이용한 원형 차트 렌더링 -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // 카테고리별 색상을 고정
+                var categoryColors = {
+                    "Confections": 'rgba(255, 99, 132, 0.8)',  // Confections
+                    "Beverages": 'rgba(54, 162, 235, 0.8)',    // Beverages
+                    "Condiments": 'rgba(255, 206, 86, 0.8)',   // Condiments
+                    "Seafood": 'rgba(75, 192, 192, 0.8)',      // Seafood
+                    "Dairy Products": 'rgba(153, 102, 255, 0.8)', // Dairy Products
+                    "Grains/Cereals": 'rgba(255, 159, 64, 0.8)', // Grains/Cereals
+                    "Meat/Poultry": 'rgba(199, 199, 199, 0.8)', // Meat/Poultry
+                    "Produce": 'rgba(255, 205, 86, 0.8)'        // Produce
+                };
 
-    <!-- Pie Chart 생성 스크립트 -->
-    <script>
-        // 페이지가 로드되면 차트를 생성하는 함수
-        document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('myPieChart').getContext('2d');
-            var myPieChart = new Chart(ctx, {
-                type: 'pie', // 차트 유형: 원형 차트
-                data: {
-                    labels: ['Category A', 'Category B', 'Category C', 'Category D'], // 항목 이름
-                    datasets: [{
-                        label: 'Sample Data',
-                        data: [30, 50, 20, 40], // 항목별 데이터 값
-                        backgroundColor: [
-                            '#FF6384', // 색상
-                            '#36A2EB',
-                            '#FFCE56',
-                            '#4BC0C0'
-                        ],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            enabled: true
+                var categoryLabels = Object.keys(categoryColors);
+                var categorySalesData = [104976, 97048, 96814, 96777, 80753, 56465, 48545, 40505];
+                var totalSales = categorySalesData.reduce((a, b) => a + b, 0);
+
+                // 카테고리별 총 매출 차트
+                var ctxPie = document.getElementById("categorySalesPieChart").getContext("2d");
+                new Chart(ctxPie, {
+                    type: 'pie',
+                    data: {
+                        labels: categoryLabels,
+                        datasets: [{
+                            label: 'Category Sales',
+                            data: categorySalesData,
+                            backgroundColor: categoryLabels.map(label => categoryColors[label]), // 고정된 색상 사용
+                            borderColor: categoryLabels.map(label => categoryColors[label].replace('0.8', '1')), // 경계선 색상
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        var value = tooltipItem.raw;
+                                        var percentage = ((value / totalSales) * 100).toFixed(2);
+                                        return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        family: 'Arial'
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+                });
+
+                // 월별 매출 차트 생성
+                var salesData = {{ sales_data | tojson }};
+                Object.keys(salesData).forEach(function(month) {
+                    var ctx = document.getElementById("chart-" + month);
+                    if (ctx) {
+                        var chartData = salesData[month].map(item => item.category_sales);
+                        var monthTotalSales = chartData.reduce((a, b) => a + b, 0);
+
+                        new Chart(ctx.getContext("2d"), {
+                            type: 'pie',
+                            data: {
+                                labels: salesData[month].map(item => item.category),
+                                datasets: [{
+                                    data: chartData,
+                                    backgroundColor: salesData[month].map(item => categoryColors[item.category]), // 고정된 색상 사용
+                                    borderColor: salesData[month].map(item => categoryColors[item.category].replace('0.8', '1')), // 경계선 색상
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: false,
+                                plugins: {
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(tooltipItem) {
+                                                var value = tooltipItem.raw;
+                                                var percentage = ((value / monthTotalSales) * 100).toFixed(2);
+                                                return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             });
-        });
-    </script>
-</body>
+        </script>
+    </body>
 </html>

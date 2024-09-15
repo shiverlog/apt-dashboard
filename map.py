@@ -10,7 +10,7 @@ def get_map_data():
         SELECT ShipCountry, ShipCity, COUNT(*) AS order_count
         FROM Orders
         GROUP BY ShipCountry, ShipCity
-        ORDER BY ShipCountry, ShipCity, order_count DESC;;
+        ORDER BY ShipCountry, ShipCity, order_count DESC;
     """)
     map_data = cursor.fetchall()
 

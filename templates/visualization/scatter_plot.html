@@ -1,134 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Line Chart and Scatter Plot Example</title>
-    <!-- 부트스트랩 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Line Chart -->
-            <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-line me-1"></i>
-                        Line Chart - 시간에 따른 변화나 추세를 시각화
-                    </div>
-                    <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
-                </div>
-            </div>
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+            <div class="container-lg">
+                <h1>Scatter Plot</h1>
 
-            <!-- Scatter Plot -->
-            <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-scatter me-1"></i>
-                        Scatter Plot - 두 변수 간의 관계를 시각화
+                <!-- 카테고리별 산포도 -->
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-1"></i>
+                            카테고리별 평균 주문 수량과 총 매출 간의 관계
+                        </div>
+                        <div class="card-body">
+                            <canvas id="myAllScatterChart" width="100%" height="40"></canvas>
+                        </div>
                     </div>
-                    <div class="card-body"><canvas id="myScatterChart" width="100%" height="40"></canvas></div>
                 </div>
+
+                <!-- 제품별 주문량과 재고 상태의 산포도 -->
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-1"></i>
+                            제품별 주문량과 재고 상태의 관계 분석
+                        </div>
+                        <div class="card-body">
+                            <canvas id="myProductStockScatterChart" width="100%" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% include 'fragment/footer.html' %}
             </div>
         </div>
-    </div>
 
-    <!-- 부트스트랩 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- 산포도 차트를 그리기 위한 스크립트 -->
+        <script>
+            // 카테고리별 산포도 차트
+            var ctxScatter = document.getElementById("myAllScatterChart").getContext("2d");
+            var scatterData = {
+                datasets: [{
+                    label: 'Category Sales',
+                    data: [
+                        {% for category, total_sales in scatter_data %}
+                        { x: "{{ category }}", y: {{ total_sales }} },
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 10
+                }]
+            };
 
-    <!-- Line Chart 생성 스크립트 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Line Chart 데이터와 옵션 설정
-            var ctxLine = document.getElementById('myLineChart').getContext('2d');
-            var myLineChart = new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                    datasets: [{
-                        label: 'Sample Data',
-                        data: [65, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        borderColor: '#4BC0C0',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Months'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Value'
-                            },
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-    <!-- Scatter Plot 생성 스크립트 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Scatter Plot 데이터와 옵션 설정
-            var ctxScatter = document.getElementById('myScatterChart').getContext('2d');
-            var myScatterChart = new Chart(ctxScatter, {
+            new Chart(ctxScatter, {
                 type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Scatter Dataset',
-                        data: [
-                            { x: -10, y: 0 },
-                            { x: 0, y: 10 },
-                            { x: 10, y: 5 },
-                            { x: 20, y: 20 },
-                            { x: 30, y: 25 },
-                            { x: 40, y: 30 }
-                        ],
-                        backgroundColor: '#FF6384'
-                    }]
-                },
+                data: scatterData,
                 options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
                     scales: {
                         x: {
+                            type: 'category',
                             title: {
                                 display: true,
-                                text: 'X Axis'
+                                text: 'Category'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Y Axis'
-                            },
-                            beginAtZero: true
+                                text: 'Sales'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    family: 'Arial'
+                                }
+                            }
                         }
                     }
                 }
             });
-        });
-    </script>
-</body>
+
+            // 제품별 주문량과 재고 상태 차트
+            var ctxProductStockScatter = document.getElementById("myProductStockScatterChart").getContext("2d");
+            var productStockData = {
+                datasets: [{
+                    label: 'Product Stock and Orders',
+                    data: [
+                        {% for product in product_stock_order_data %}
+                        { x: "{{ product.ProductName }}", y: {{ product.TotalOrderQuantity }} },
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    pointRadius: 10
+                }]
+            };
+
+            new Chart(ctxProductStockScatter, {
+                type: 'scatter',
+                data: productStockData,
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: 'Product'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total Orders'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    family: 'Arial'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
 </html>

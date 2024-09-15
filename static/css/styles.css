@@ -112,7 +112,7 @@ hr {
   opacity: 0.25;
 }
 
-h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, . {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 500;
@@ -120,6 +120,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 }
 
 h1, .h1 {
+  text-align: center;
   font-size: calc(1.375rem + 1.5vw);
 }
 @media (min-width: 1200px) {
@@ -637,6 +638,8 @@ progress {
   width: 100%;
   padding-right: calc(var(--bs-gutter-x) * 0.5);
   padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-top: 30px;
+  margin-bottom: 30px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -4221,6 +4224,8 @@ textarea.form-control-lg {
   flex: 1 1 auto;
   padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
   color: var(--bs-card-color);
+  justify-content: center;  /* Horizontally center */
+  align-items: center;      /* Vertically center */
 }
 
 .card-title {
@@ -11266,7 +11271,8 @@ body {
     background-color: rgba(0, 0, 0, 0.8); /* 호버 시 배경을 더 어둡게 */
 }
 
-/* Light Mode */
+/* ---------------------------------------Theme Mode--------------------------------------- */
+
 body.light-mode {
     background-color: #f8f9fa;
     color: #212529;
@@ -11277,10 +11283,50 @@ body.light-mode {
     color: #343a40;
 }
 
-/* Dark Mode */
 body.dark-mode {
     background-color: #343a40;
     color: #f8f9fa;
+}
+
+body.dark-mode .card {
+    background-color: #333333;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode table {
+    color: white;
+}
+
+body.dark-mode table th {
+  color: white;
+}
+
+body.dark-mode table td {
+    color: ghostwhite;
+}
+
+body.dark-mode table tr:hover th,
+body.dark-mode table tr:hover td {
+    color: #00aaff;
+    background-color: #555555;
+}
+
+body.dark-mode .dataTables_wrapper {
+    color: white;
+}
+
+body.dark-mode input {
+    color: #212529;
+    background-color: #ffffff;
+}
+
+body.light-mode .card {
+    background-color: #ffffff;
+    color: #212529;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .sb-sidenav-dark {
@@ -11288,29 +11334,60 @@ body.dark-mode {
     color: #ffffff;
 }
 
-/* 전체 스크롤바 영역 */
+/* ----------------------------------------Scrollbar--------------------------------------- */
+
 ::-webkit-scrollbar {
-    width: 15px; /* 스크롤바의 너비 */
+    width: 15px;
 }
 
-/* 스크롤바의 트랙(배경) */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; /* 트랙의 배경 색상 */
-    border-radius: 10px; /* 트랙의 모서리를 둥글게 */
+    background: #f1f1f1;
+    border-radius: 10px;
 }
 
-/* 스크롤바 핸들(움직이는 부분) */
+
 ::-webkit-scrollbar-thumb {
-    background: #888; /* 스크롤 핸들의 색상 */
-    border-radius: 10px; /* 핸들의 모서리를 둥글게 */
+    background: #888;
+    border-radius: 10px;
 }
 
-/* 마우스를 올렸을 때의 스크롤바 핸들 */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 마우스를 올렸을 때 색상 */
+    background: #555;
 }
 
-/* 스크롤바 모서리(끝부분) */
 ::-webkit-scrollbar-corner {
-    background: transparent; /* 모서리 부분의 색상 */
+    background: transparent;
+}
+
+/* ----------------------------------------Network---------------------------------------- */
+
+.node rect {
+    fill: white;
+    stroke: black;
+    stroke-width: 2px;
+}
+
+.node text {
+    font: 12px sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.link {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+#categorySalesPieChart {
+    width: 1200px !important;
+    height: 400px !important;
+}
+
+#myPieChart, #myRadarChart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px !important;
+    height: 600px !important;
 }

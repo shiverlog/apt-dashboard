@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+                <div class="container-lg">
+                    <h1>APT Network</h1>
+                    <div id="org-chart"></div>
+                </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
+        <script>
+            // 서버에서 전달된 직원 데이터를 하드코딩 (예시)
+            const employees = {{ employees|tojson }};
+
+            function buildTree(employees) {
+                const employeeMap = {};
+
+                // 직원 데이터를 ID 기반으로 맵 생성
+                employees.forEach(emp => {
+                    employeeMap[emp.Id] = {
+                        name: emp.EmployeeName,
+                        title: emp.Title,
+                        children: []
+                    };
+                });
+
+                const root = [];
+
+                // 직원 데이터를 상사-직원 관계로 연결
+                employees.forEach(emp => {
+                    if (emp.ManagerName) {
+                        const manager = employees.find(e => e.EmployeeName === emp.ManagerName);
+                        if (manager) {
+                            employeeMap[manager.Id].children.push(employeeMap[emp.Id]);
+                        }
+                    } else {
+                        root.push(employeeMap[emp.Id]);
+                    }
+                });
+                return root[0]; // 루트 노드 반환
+            }
+
+            const employeeTreeData = buildTree(employees);
+
+            // 트리 차트 크기 설정
+            const width = 1200;
+            const height = 600;
+
+            // D3 트리 레이아웃 설정
+            const svg = d3.select("#org-chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(40,100)");
+
+            const tree = d3.tree().size([width, 400]);  // 트리 크기 설정
+            const root = d3.hierarchy(employeeTreeData);
+
+            tree(root);
+
+            // 링크 (부모-자식 관계 선) 그리기
+            svg.selectAll(".link")
+                .data(root.links())
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkVertical()
+                    .x(d => d.x)
+                    .y(d => d.y))
+                .attr("stroke-dasharray", "4 2")
+                .attr("stroke", "black")
+                .attr("fill", "none");
+
+            // 노드 (사각형 및 텍스트) 그리기
+            const node = svg.selectAll(".node")
+                .data(root.descendants())
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+
+            // 사각형 노드
+            node.append("rect")
+                .attr("width", 180)
+                .attr("height", 80)
+                .attr("x", -90)
+                .attr("y", -40)
+                .attr("stroke", "black")
+                .style("fill", d => {
+                    // 각 깊이에 따라 파란색 계열 적용
+                    switch (d.depth) {
+                        case 0:
+                            return "#0059b3"; // 루트 노드 (짙은 파란색)
+                        case 1:
+                            return "#4d88ff"; // 1단계 (중간 파란색)
+                        case 2:
+                            return "#99bbff"; // 2단계 (연한 파란색)
+                        default:
+                            return "#cce0ff"; // 기본 색상 (더 연한 파란색)
+                    }
+                });
+
+            // 노드 텍스트
+            node.append("text")
+                .attr("x", 0)
+                .style("text-anchor", "middle")
+                .selectAll("tspan")
+                .data(d => [d.data.title, d.data.name])
+                .enter().append("tspan")
+                .attr("x", 0)
+                .attr("dy", (d, i) => i === 0 ? -10 : 20)
+                .style("font-size", (d, i) => i === 0 ? "15px" : "12px")
+                .style("font-weight", (d, i) => i === 0 ? "bold" : "normal")
+                .text(d => d);
+        </script>
+    </body>
+</html>
