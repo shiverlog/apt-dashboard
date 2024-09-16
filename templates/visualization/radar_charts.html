@@ -8,10 +8,89 @@
             {% include 'fragment/sidebar.html' %}
             <div class="container-lg">
             <h1>Radar Chart</h1>
-
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-1"></i>
+                            주요 제품 카테고리의 계절별 매출 분석
+                        </div>
+                        <div class="card-body">
+                            <canvas id="myAllRadarChart" width="50%" height="20"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
             {% include 'fragment/footer.html' %}
             </div>
         </div>
+
+        <!-- Chart.js 라이브러리 -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- 레이더 차트 생성 -->
+        <script>
+            const radarData = {{ radar_data | tojson }};
+            const categories = ["Beverages", "Confections", "Meat/Poultry", "Dairy Products", "Condiments", "Seafood", "Produce", "Grains/Cereals"];
+
+            const radarChartData = {
+                labels: categories,
+                datasets: [
+                    {
+                        label: 'Fall',
+                        data: categories.map(category => radarData.Fall[category] || 0),
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    },
+                    {
+                        label: 'Winter',
+                        data: categories.map(category => radarData.Winter[category] || 0),
+                        fill: true,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                    },
+                    {
+                        label: 'Spring',
+                        data: categories.map(category => radarData.Spring[category] || 0),
+                        fill: true,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    },
+                    {
+                        label: 'Summer',
+                        data: categories.map(category => radarData.Summer[category] || 0),
+                        fill: true,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+                    }
+                ]
+            };
+
+            new Chart(document.getElementById("myAllRadarChart"), {
+                type: 'radar',
+                data: radarChartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 30000000
+                        }
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

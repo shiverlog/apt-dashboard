@@ -378,7 +378,7 @@ new Chart(ctxColumnChart, {
     }
 });
 
-
+// timeline
 var plotlyTimelineData = [{
     x: ['Spring', 'Summer', 'Autumn', 'Winter' ],
     y: [ // 각 계절의 총 주문 수량을 제품별로 더한 값

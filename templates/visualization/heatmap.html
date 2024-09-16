@@ -1,41 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plotly Heatmap Example</title>
-    <!-- Plotly.js 라이브러리 -->
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+               <div class="container-lg">
+               <h1>Heatmaps</h1>
 
-    <!-- 부트스트랩 CSS -->
+                   {# 첫 번째 히트맵 - 카테고리별 매출과 재고 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                카테고리별 매출과 재고 히트맵
+                            </div>
+                            <div class="card-body">
+                                 <div id="salesStockHeatmap"></div>
+                            </div>
+                        </div>
+                    </div>
 
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-chart-heatmap me-1"></i>
+                    {# 두 번째 히트맵 - 계절과 주간 매출 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                계절과 주간 매출 히트맵
+                            </div>
+                            <div class="card-body">
+                                 <div id="seasonalWeeklySalesHeatmap"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div id="heatmap"></div>
-                    </div>
-                </div>
+               </div>
+            {% include 'fragment/footer.html' %}
             </div>
         </div>
-    </div>
+        <!-- 첫 번째 히트맵 - 카테고리별 매출과 재고 -->
+        <script>
+    // sales_stock_data['values']를 각각의 매출(Sales)과 재고(Stock) 배열로 분리하여 JavaScript에서 처리
+    var salesStockValues = {
+        sales: {{ sales_stock_data['values'][0] | tojson | safe }},
+        stock: {{ sales_stock_data['values'][1] | tojson | safe }}
+    };
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var data = [{
-                z: [[1, 20, 30], [20, 1, 60], [30, 60, 1]], // 히트맵 데이터
-                x: ['Monday', 'Tuesday', 'Wednesday'], // x축 값
-                y: ['Morning', 'Afternoon', 'Evening'], // y축 값
-                type: 'heatmap'
+    var salesStockCategories = {{ sales_stock_data['categories'] | tojson | safe }};
+
+    // 1. z 데이터를 수동으로 조립하여 사용
+    var z = [];
+    for (var i = 0; i < salesStockCategories.length; i++) {
+        z.push([salesStockValues.sales[i], salesStockValues.stock[i]]);
+    }
+
+    // 히트맵 데이터 구성
+    var salesStockData = [{
+        z: z,  // z 값은 매출과 재고의 2차원 배열
+        x: ['Sales', 'Stock'],  // x축에 매출과 재고
+        y: salesStockCategories,  // y축에 카테고리
+        type: 'heatmap',
+        colorscale: 'Viridis',  // 컬러 스케일 설정
+        colorbar: {
+            title: 'Value'  // 색상바 타이틀
+        }
+    }];
+
+    // 레이아웃 설정
+    var layout = {
+        title: '카테고리별 매출 및 재고 히트맵',  // 그래프 타이틀
+        xaxis: { title: 'Metrics (Sales and Stock)' },  // x축 타이틀
+        yaxis: { title: 'Categories' }  // y축 타이틀
+    };
+
+    // Plotly로 히트맵 그리기
+    Plotly.newPlot('salesStockHeatmap', salesStockData, layout);
+</script>
+
+        <!-- 두 번째 히트맵 - 계절과 주간 매출 -->
+        <script>
+            var seasonalWeeklySalesData = [{
+                z: {{ seasonal_weekly_sales_data['data'] | tojson }},
+                x: {{ seasonal_weekly_sales_data['weeks'] | tojson }},
+                y: {{ seasonal_weekly_sales_data['categories'] | tojson }},
+                type: 'heatmap',
+                colorscale: 'Viridis'
             }];
 
-            Plotly.newPlot('heatmap', data); // Plotly를 사용하여 히트맵 생성
-        });
-    </script>
-</body>
+            var layout2 = {
+                xaxis: { title: 'Weeks' },
+                yaxis: { title: 'Categories' }
+            };
+
+            Plotly.newPlot('seasonalWeeklySalesHeatmap', seasonalWeeklySalesData, layout2);
+        </script>
+    </body>
 </html>

@@ -1,10 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+               <div class="container-lg">
+                   <h1>Stacked Bar Charts</h1>
+                   {#누적 막대 차트#}
+                   <div class="col-xl-12">
+                       <div class="card mb-4">
+                           <div class="card-header">
+                               <i class="fa-solid fa-chart-bar"></i>
+                               고매출 상위 10위 고객별 카테고리 매출 누적
+                           </div>
+                           <div class="card-body">
+                               <canvas id="myAllColumnChart" width="100%" height="26"></canvas>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
 
-</body>
+        <!-- Stacked Bar Chart Script -->
+        <script>
+            // 전달된 데이터로 누적 막대 그래프 구성
+            const topCustomersSales = {{ top_customers_sales | tojson }};
+            const productOrderQuantity = {{ product_order_quantity | tojson }};
+
+            // 고객명 및 카테고리 추출
+            const customers = topCustomersSales.map(item => item.CustomerName);
+            const categories = [...new Set(topCustomersSales.map(item => item.CategoryName))];
+
+            // 카테고리별 데이터셋 생성
+            const datasets = categories.map(category => {
+                return {
+                    label: category,
+                    data: customers.map(customer => {
+                        const entry = topCustomersSales.find(item => item.CustomerName === customer && item.CategoryName === category);
+                        return entry ? entry.TotalSales : 0;
+                    }),
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)', // 색상 설정 (카테고리별로 다르게 할 수 있음)
+                };
+            });
+
+            // 누적 막대 차트 생성
+            var ctxColumnChart = document.getElementById("myAllColumnChart").getContext("2d");
+            new Chart(ctxColumnChart, {
+                type: 'bar',
+                data: {
+                    labels: customers, // 고객 이름 (x축)
+                    datasets: datasets // 카테고리별 누적 데이터
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true // x축에서 데이터가 누적되도록 설정
+                        },
+                        y: {
+                            stacked: true // y축에서 데이터가 누적되도록 설정
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
 </html>

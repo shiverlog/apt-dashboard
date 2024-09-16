@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, flash, redirect, url_for
 from flask_cors import CORS
 
 from charts import get_categories, execute_query_for_chart, get_employee_orders, get_shipper_shipments, \
     get_region_orders, get_city_sales, get_scatter_plot_data, get_product_stock_order_data, \
-    get_category_sales_data, get_monthly_sales_data
+    get_category_sales_data, get_monthly_sales_data, get_radar_chart_data, get_top_customers_sales_data, \
+    get_product_order_quantity_data, get_timeline_data, get_monthly_order_data, \
+    get_weekly_order_data, get_sales_stock_heatmap_data, get_seasonal_weekly_sales_data
 from database import get_table_data
 from execute_query import execute_sql_query
 from map import get_map_data
@@ -58,6 +60,12 @@ def show_network():
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('login'))
 
 @app.route('/register')
 def register():
@@ -126,20 +134,44 @@ def show_pie_charts():
     return render_template('visualization/pie_charts.html', sales_data=sales_data, category_sales_data=category_sales_data)
 
 @app.route('/radar_charts_detail')
-def show_radar_charts():
-    return render_template('visualization/radar_charts.html')
+def radar_chart():
+    radar_data = get_radar_chart_data()
+    return render_template('visualization/radar_charts.html', radar_data=radar_data)
 
 @app.route('/stacked_bar_charts_detail')
 def show_stacked_bar_charts():
-    return render_template('visualization/stacked_bar_charts.html')
+    # 데이터 가져오기
+    top_customers_sales = get_top_customers_sales_data()
+    product_order_quantity = get_product_order_quantity_data()
+
+    # 데이터를 템플릿에 전달
+    return render_template('visualization/stacked_bar_charts.html',
+                           top_customers_sales=top_customers_sales,
+                           product_order_quantity=product_order_quantity)
 
 @app.route('/timeline_detail')
 def show_timeline():
-    return render_template('visualization/timeline.html')
+    timeline_data = get_timeline_data()
+    monthly_data = get_monthly_order_data()
+    weekly_data = get_weekly_order_data()
+    categories = list(timeline_data['Spring'].keys())  # 카테고리 리스트 생성
+    return render_template('visualization/timeline.html', timeline_data=timeline_data, monthly_data=monthly_data, weekly_data=weekly_data, categories=categories)
 
 @app.route('/heatmap_detail')
 def show_heatmap():
-    return render_template('visualization/heatmap.html')
+    # 두 개의 히트맵 데이터를 모두 가져옴
+    sales_stock_data = get_sales_stock_heatmap_data()
+    seasonal_weekly_sales_data = get_seasonal_weekly_sales_data()
+
+    print("Sales Stock Data:", sales_stock_data)
+    print("Seasonal Weekly Sales Data:", seasonal_weekly_sales_data)
+
+    # 두 데이터셋을 템플릿에 전달
+    return render_template(
+        'visualization/heatmap.html',
+        sales_stock_data=sales_stock_data,
+        seasonal_weekly_sales_data=seasonal_weekly_sales_data
+    )
 
 @app.route('/sql_analysis_detail')
 def show_sql_analysis():

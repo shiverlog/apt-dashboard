@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+    {% include 'fragment/header.html' %}
+    <body class="sb-nav-fixed">
+        {% include 'fragment/nav.html' %}
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+            {% include 'fragment/sidebar.html' %}
+               <div class="container-lg">
+               <h1>Timeline</h1>
+
+                   {# 타임 라인 - 카테고리별 계절 주문 수량 변화 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-stream me-1"></i>
+                                카테고리별 계절 주문 수량 변화
+                            </div>
+                            <div class="card-body">
+                                 <div id="seasonTimeline" style="width:100%; height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# 타임 라인 - 카테고리별 월별 주문 수량 변화 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-stream me-1"></i>
+                                카테고리별 월별 주문 수량 변화
+                            </div>
+                            <div class="card-body">
+                                 <div id="monthlyTimeline" style="width:100%; height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# 타임 라인 - 카테고리별 주별 주문 수량 변화 #}
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-stream me-1"></i>
+                                카테고리별 주별 주문 수량 변화
+                            </div>
+                            <div class="card-body">
+                                 <div id="weeklyTimeline" style="width:100%; height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+               </div>
+            {% include 'fragment/footer.html' %}
+            </div>
+        </div>
+
+        <!-- 카테고리별 계절 주문 수량 변화 시각화 -->
+        <script>
+    var timelineData = {{ timeline_data | tojson }};
+    var categories = Object.keys(timelineData.Spring || {});
+
+    if (categories.length === 0) {
+        console.error("No categories found in timelineData");
+    }
+
+    var traces = [];
+
+    categories.forEach(function(category) {
+        // timelineData에 계절별 카테고리가 존재하는지 확인하고 없는 경우 빈 객체로 설정
+        var springData = timelineData.Spring ? (timelineData.Spring[category] || 0) : 0;
+        var summerData = timelineData.Summer ? (timelineData.Summer[category] || 0) : 0;
+        var autumnData = timelineData.Autumn ? (timelineData.Autumn[category] || 0) : 0;
+        var winterData = timelineData.Winter ? (timelineData.Winter[category] || 0) : 0;
+
+        // 각 카테고리가 timelineData에 있는지 확인 후 값이 없으면 0으로 처리
+        var trace = {
+            x: ['Spring', 'Summer', 'Autumn', 'Winter'],
+            y: [springData, summerData, autumnData, winterData],
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: category,
+            line: { width: 2 },
+            marker: { size: 8 }
+        };
+        traces.push(trace);
+    });
+
+    var layout = {
+        title: '카테고리별 계절 주문 수량 변화',
+        xaxis: { title: '계절' },
+        yaxis: { title: '주문 수량' }
+    };
+
+    Plotly.newPlot('seasonTimeline', traces, layout);
+</script>
+
+        <!-- 카테고리별 월별 주문 수량 변화 시각화 -->
+        <script>
+            var monthlyData = {{ monthly_data | tojson }};
+            var monthTraces = [];
+
+            Object.keys(monthlyData).forEach(function(month) {
+                var trace = {
+                    x: [month],
+                    y: Object.keys(monthlyData[month]).map(category => monthlyData[month][category] || 0),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: month,
+                    line: { width: 2 },
+                    marker: { size: 8 }
+                };
+                monthTraces.push(trace);
+            });
+
+            var layout = {
+                title: '카테고리별 월별 주문 수량 변화',
+                xaxis: { title: '월' },
+                yaxis: { title: '주문 수량' }
+            };
+
+            Plotly.newPlot('monthlyTimeline', monthTraces, layout);
+        </script>
+
+        <!-- 카테고리별 주별 주문 수량 변화 시각화 -->
+        <script>
+            var weeklyData = {{ weekly_data | tojson }};
+            var weekTraces = [];
+
+            Object.keys(weeklyData).forEach(function(week) {
+                var trace = {
+                    x: [week],
+                    y: Object.keys(weeklyData[week]).map(category => weeklyData[week][category] || 0),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: week,
+                    line: { width: 2 },
+                    marker: { size: 8 }
+                };
+                weekTraces.push(trace);
+            });
+
+            var layout = {
+                title: '카테고리별 주별 주문 수량 변화',
+                xaxis: { title: '주' },
+                yaxis: { title: '주문 수량' }
+            };
+
+            Plotly.newPlot('weeklyTimeline', weekTraces, layout);
+        </script>
+
+    </body>
+</html>

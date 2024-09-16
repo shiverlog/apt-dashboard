@@ -1,4 +1,5 @@
 from flask import render_template
+from sqlalchemy.dialects.mysql import pymysql
 
 from db import get_db_connection
 
@@ -261,3 +262,323 @@ def get_monthly_sales_data():
         })
 
     return sales_data
+
+def get_radar_chart_data():
+    query = """
+        SELECT
+            CASE 
+                WHEN MONTH(o.OrderDate) IN (3, 4, 5) THEN 'Spring'
+                WHEN MONTH(o.OrderDate) IN (6, 7, 8) THEN 'Summer'
+                WHEN MONTH(o.OrderDate) IN (9, 10, 11) THEN 'Fall'
+                WHEN MONTH(o.OrderDate) IN (12, 1, 2) THEN 'Winter'
+            END AS Season,
+            c.CategoryName,
+            SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSales
+        FROM OrderDetail od
+        JOIN Orders o ON od.OrderId = o.Id
+        JOIN Product p ON od.ProductId = p.Id
+        JOIN Category c ON p.CategoryId = c.Id
+        GROUP BY Season, c.CategoryName
+        ORDER BY Season, TotalSales DESC
+    """
+
+    connection = get_db_connection()
+    with connection.cursor(dictionary=True) as cursor:  # dictionary=True 사용
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+    # 데이터 가공 (차트에 맞게 계절별로 데이터를 분리)
+    season_data = {
+        'Spring': {},
+        'Summer': {},
+        'Fall': {},
+        'Winter': {}
+    }
+
+    for row in result:
+        season = row['Season']
+        category = row['CategoryName']
+        sales = row['TotalSales']
+        season_data[season][category] = sales
+
+    return season_data
+
+# 고매출 상위 10위 고객별 구매 카테고리 데이터
+def get_top_customers_sales_data():
+    query = """
+    SELECT
+        c.CompanyName AS CustomerName,
+        ca.CategoryName,
+        SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSales
+    FROM
+        Orders o
+    JOIN
+        OrderDetail od ON o.Id = od.OrderId
+    JOIN
+        Product p ON od.ProductId = p.Id
+    JOIN
+        Category ca ON p.CategoryId = ca.Id
+    JOIN
+        Customer c ON o.CustomerId = c.Id
+    GROUP BY
+        c.CompanyName, ca.CategoryName
+    ORDER BY
+        TotalSales DESC
+    LIMIT 10;
+    """
+    connection = get_db_connection()
+    with connection.cursor(dictionary=True) as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall()
+    return result
+
+# 제품별 누적 주문 수량 데이터
+def get_product_order_quantity_data():
+    query = """
+    SELECT
+        p.ProductName,
+        SUM(od.Quantity) AS TotalOrderQuantity
+    FROM
+        OrderDetail od
+    JOIN
+        Product p ON od.ProductId = p.Id
+    GROUP BY
+        p.ProductName
+    ORDER BY
+        TotalOrderQuantity DESC
+    LIMIT 10;
+    """
+    connection = get_db_connection()
+    with connection.cursor(dictionary=True) as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall()
+    return result
+
+
+def get_timeline_data():
+    query = """
+        SELECT
+            CASE 
+                WHEN MONTH(o.OrderDate) IN (3, 4, 5) THEN 'Spring'
+                WHEN MONTH(o.OrderDate) IN (6, 7, 8) THEN 'Summer'
+                WHEN MONTH(o.OrderDate) IN (9, 10, 11) THEN 'Fall'
+                WHEN MONTH(o.OrderDate) IN (12, 1, 2) THEN 'Winter'
+            END AS Season,
+            c.CategoryName,
+            SUM(od.Quantity) AS TotalOrders
+        FROM OrderDetail od
+        JOIN Orders o ON od.OrderId = o.Id
+        JOIN Product p ON od.ProductId = p.Id
+        JOIN Category c ON p.CategoryId = c.Id
+        GROUP BY Season, c.CategoryName
+        ORDER BY Season, c.CategoryName;
+    """
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    # 모든 카테고리 이름 가져오기
+    all_categories = set(row['CategoryName'] for row in result)
+
+    timeline_data = {
+        'Spring': {category: 0 for category in all_categories},
+        'Summer': {category: 0 for category in all_categories},
+        'Fall': {category: 0 for category in all_categories},
+        'Winter': {category: 0 for category in all_categories}
+    }
+
+    # 결과 데이터를 처리하면서 각 카테고리에 값을 넣어줌
+    for row in result:
+        season = row['Season']
+        category = row['CategoryName']
+        total_orders = row['TotalOrders']
+        timeline_data[season][category] = total_orders
+
+    cursor.close()
+    connection.close()
+
+    return timeline_data
+
+
+def get_monthly_order_data():
+    query = """
+        SELECT
+            DATE_FORMAT(o.OrderDate, '%Y-%m') AS Month,
+            c.CategoryName,
+            SUM(od.Quantity) AS TotalOrders
+        FROM OrderDetail od
+        JOIN Orders o ON od.OrderId = o.Id
+        JOIN Product p ON od.ProductId = p.Id
+        JOIN Category c ON p.CategoryId = c.Id
+        GROUP BY Month, c.CategoryName
+        ORDER BY Month, c.CategoryName;
+    """
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    monthly_data = {}
+    for row in result:
+        month = row['Month']
+        category = row['CategoryName']
+        total_orders = row['TotalOrders']
+        if month not in monthly_data:
+            monthly_data[month] = {}
+        monthly_data[month][category] = total_orders
+
+    cursor.close()
+    connection.close()
+
+    return monthly_data
+
+
+def get_weekly_order_data():
+    query = """
+        SELECT
+            WEEK(o.OrderDate) AS Week,
+            c.CategoryName,
+            SUM(od.Quantity) AS TotalOrders
+        FROM OrderDetail od
+        JOIN Orders o ON od.OrderId = o.Id
+        JOIN Product p ON od.ProductId = p.Id
+        JOIN Category c ON p.CategoryId = c.Id
+        GROUP BY Week, c.CategoryName
+        ORDER BY Week, c.CategoryName;
+    """
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    weekly_data = {}
+    for row in result:
+        week = row['Week']
+        category = row['CategoryName']
+        total_orders = row['TotalOrders']
+        if week not in weekly_data:
+            weekly_data[week] = {}
+        weekly_data[week][category] = total_orders
+
+    cursor.close()
+    connection.close()
+
+    return weekly_data
+
+
+# 1. 카테고리별 매출과 재고 히트맵 데이터 가져오기
+def get_sales_stock_heatmap_data():
+    query = """
+        SELECT 
+            c.CategoryName,
+            SUM(od.Quantity * od.UnitPrice) AS TotalSales,
+            SUM(p.UnitsInStock) AS TotalStock
+        FROM 
+            OrderDetail od
+        JOIN 
+            Product p ON od.ProductId = p.Id
+        JOIN 
+            Category c ON p.CategoryId = c.Id
+        GROUP BY 
+            c.CategoryName
+        ORDER BY 
+            TotalSales DESC;
+    """
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    # Decimal 값을 float으로 변환
+    categories = [row['CategoryName'] for row in result]
+    sales = [float(row['TotalSales']) for row in result]  # Decimal to float
+    stock = [float(row['TotalStock']) for row in result]  # Decimal to float
+
+    heatmap_data = {
+        'categories': categories,
+        'values': [sales, stock]
+    }
+
+    # 변환된 데이터를 확인하기 위한 출력
+    print("Processed Heatmap Data (with float):", heatmap_data)
+    return heatmap_data
+
+
+# 2. 계절별 주간 매출, 카테고리별 재고 대비 판매량 히트맵 데이터 가져오기
+def get_seasonal_weekly_sales_data():
+    query = """
+        WITH SeasonalSales AS (
+            SELECT 
+                CASE 
+                    WHEN MONTH(o.OrderDate) IN (3, 4, 5) THEN 'Spring'
+                    WHEN MONTH(o.OrderDate) IN (6, 7, 8) THEN 'Summer'
+                    WHEN MONTH(o.OrderDate) IN (9, 10, 11) THEN 'Fall'
+                    ELSE 'Winter'
+                END AS Season,
+                c.CategoryName,
+                WEEK(o.OrderDate) AS WeekNumber,
+                SUM(od.Quantity * od.UnitPrice) AS TotalSales,
+                SUM(p.UnitsInStock) AS TotalStock,
+                SUM(od.Quantity) AS TotalQuantity
+            FROM 
+                Orders o
+            JOIN 
+                OrderDetail od ON o.Id = od.OrderId
+            JOIN 
+                Product p ON od.ProductId = p.Id
+            JOIN 
+                Category c ON p.CategoryId = c.Id
+            GROUP BY 
+                Season, WeekNumber, c.CategoryName
+        )
+        SELECT 
+            Season,
+            WeekNumber,
+            CategoryName,
+            TotalSales,
+            TotalStock,
+            TotalQuantity,
+            (TotalQuantity / NULLIF(TotalStock, 0)) AS SalesToStockRatio
+        FROM 
+            SeasonalSales
+        ORDER BY 
+            Season, WeekNumber, CategoryName;
+    """
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    # 히트맵 데이터 구조로 변환
+    seasons = ['Spring', 'Summer', 'Fall', 'Winter']
+    weeks = sorted(set([row['WeekNumber'] for row in result]))
+    categories = set(row['CategoryName'] for row in result)
+
+    # 히트맵에 표시할 실제 데이터 구성 (히트맵에서 사용할 형태로 변환)
+    data_matrix = []
+    for category in categories:
+        row = []
+        for week in weeks:
+            value = next((r['TotalSales'] for r in result if r['CategoryName'] == category and r['WeekNumber'] == week), 0)
+            row.append(value)
+        data_matrix.append(row)
+
+    heatmap_data = {
+        'seasons': seasons,
+        'weeks': weeks,
+        'categories': list(categories),
+        'data': data_matrix
+    }
+    return heatmap_data
