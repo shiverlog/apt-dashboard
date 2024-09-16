@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request, session, flash, redirect, url_for
+import os
+import io
+from functools import wraps
+
+from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file
 from flask_cors import CORS
 
+from SQLtoCSV import execute_sql_query_to_csv
 from charts import get_categories, execute_query_for_chart, get_employee_orders, get_shipper_shipments, \
     get_region_orders, get_city_sales, get_scatter_plot_data, get_product_stock_order_data, \
     get_category_sales_data, get_monthly_sales_data, get_radar_chart_data, get_top_customers_sales_data, \
@@ -8,6 +13,7 @@ from charts import get_categories, execute_query_for_chart, get_employee_orders,
     get_weekly_order_data, get_sales_stock_heatmap_data, get_seasonal_weekly_sales_data
 from database import get_table_data
 from execute_query import execute_sql_query
+from login import login_page
 from map import get_map_data
 from sql_analysis import get_sql_analysis
 from table_info import get_table_info
@@ -16,6 +22,18 @@ app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'aptkey'
 
+# login.py에서 정의된 로그인 관련 라우트를 app에 추가
+app.register_blueprint(login_page)
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # 세션에 'user' 키가 없으면 로그인 페이지로 리다이렉트
+        if 'user' not in session:
+            flash('로그인이 필요합니다.', 'danger')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 @app.route('/')
 def index():
     # table_info.py의 함수 호출
@@ -31,14 +49,52 @@ def index():
 def show_jupiter():
     return render_template('visualization/jupyter.html')
 
+
 @app.route('/execute_query', methods=['GET', 'POST'])
 def execute_query():
     result = None
     if request.method == 'POST':
         query = request.form['query']
+
+        # 쿼리 실행
         result = execute_sql_query(query)
 
+        # CSV 파일 저장 버튼을 눌렀는지 확인
+        if 'export_csv' in request.form:
+            # 1. 먼저 StringIO로 CSV 데이터를 작성
+            csv_output = io.StringIO()
+            csv_filename = 'query_results.csv'
+
+            if result['rows']:  # 쿼리 결과가 있을 때만 CSV로 저장
+                success = execute_sql_query_to_csv(query, csv_output)
+                if success:
+                    # 2. StringIO의 데이터를 BytesIO로 변환
+                    csv_output.seek(0)
+                    byte_output = io.BytesIO(csv_output.getvalue().encode('utf-8'))
+
+                    # 3. 파일을 전송
+                    return send_file(
+                        byte_output,
+                        mimetype='text/csv',
+                        download_name=csv_filename,  # attachment_filename 대신 download_name 사용
+                        as_attachment=True  # 파일 다운로드 설정
+                    )
+                else:
+                    flash("An error occurred while saving the query results to CSV.", 'danger')
+            else:
+                flash("No data returned by the query to save to CSV.", 'info')
+
     return render_template('visualization/query.html', result=result)
+
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/activity-log')
+def activity_log():
+
+    return render_template('activity_log.html')
 
 @app.route('/error/401')
 def error_401():
@@ -64,7 +120,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    flash('You have been logged out.', 'info')
+    flash('로그아웃 하였습니다.', 'info')
     return redirect(url_for('login'))
 
 @app.route('/register')

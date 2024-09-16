@@ -7,7 +7,7 @@
             <div id="layoutSidenav_content">
             {% include 'fragment/sidebar.html' %}
             <div class="container-lg">
-                <h1>Scatter Plot</h1>
+                <h1>산포도(Scatter Plot)</h1>
 
                 <!-- 카테고리별 산포도 -->
                 <div class="col-xl-12">
@@ -17,7 +17,7 @@
                             카테고리별 평균 주문 수량과 총 매출 간의 관계
                         </div>
                         <div class="card-body">
-                            <canvas id="myAllScatterChart" width="100%" height="40"></canvas>
+                            <canvas id="categoryAvgOrderVsSalesScatterChart" width="100%" height="40"></canvas>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             제품별 주문량과 재고 상태의 관계 분석
                         </div>
                         <div class="card-body">
-                            <canvas id="myProductStockScatterChart" width="100%" height="40"></canvas>
+                            <canvas id="productOrderVsStockScatterChart" width="100%" height="40"></canvas>
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
         <!-- 산포도 차트를 그리기 위한 스크립트 -->
         <script>
             // 카테고리별 산포도 차트
-            var ctxScatter = document.getElementById("myAllScatterChart").getContext("2d");
+            var ctxScatter = document.getElementById("categoryAvgOrderVsSalesScatterChart").getContext("2d");
             var scatterData = {
                 datasets: [{
                     label: 'Category Sales',
@@ -91,7 +91,7 @@
             });
 
             // 제품별 주문량과 재고 상태 차트
-            var ctxProductStockScatter = document.getElementById("myProductStockScatterChart").getContext("2d");
+            var ctxProductStockScatter = document.getElementById("productOrderVsStockScatterChart").getContext("2d");
             var productStockData = {
                 datasets: [{
                     label: 'Product Stock and Orders',

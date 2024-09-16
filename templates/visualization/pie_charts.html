@@ -31,8 +31,8 @@
                             </div>
                             <div class="card-body">
                                 {% for month, data in sales_data.items() %}
-                                <div style="display:inline-block; width:200px; margin:10px;">
-                                    <canvas id="chart-{{ month }}" width="150" height="150"></canvas>
+                                <div style="display:inline-block; width:150px; margin:20px;">
+                                    <canvas id="chart-{{ month }}" width="200" height="150"></canvas>
                                     <p>{{ month }}</p>
                                 </div>
                                 {% endfor %}
@@ -43,105 +43,108 @@
                 {% include 'fragment/footer.html' %}
             </div>
         </div>
-
         <!-- Chart.js를 이용한 원형 차트 렌더링 -->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // 카테고리별 색상을 고정
-                var categoryColors = {
-                    "Confections": 'rgba(255, 99, 132, 0.8)',  // Confections
-                    "Beverages": 'rgba(54, 162, 235, 0.8)',    // Beverages
-                    "Condiments": 'rgba(255, 206, 86, 0.8)',   // Condiments
-                    "Seafood": 'rgba(75, 192, 192, 0.8)',      // Seafood
-                    "Dairy Products": 'rgba(153, 102, 255, 0.8)', // Dairy Products
-                    "Grains/Cereals": 'rgba(255, 159, 64, 0.8)', // Grains/Cereals
-                    "Meat/Poultry": 'rgba(199, 199, 199, 0.8)', // Meat/Poultry
-                    "Produce": 'rgba(255, 205, 86, 0.8)'        // Produce
-                };
+    // 카테고리별 색상을 고정
+    var categoryColors = {
+        "Beverages": 'rgba(255, 69, 58, 0.8)',
+        "Confections": 'rgba(255, 99, 132, 0.8)',
+        "Condiments": 'rgba(255, 206, 86, 0.8)',
+        "Seafood": 'rgba(75, 192, 192, 0.8)',
+        "Dairy Products": 'rgba(102, 102, 255, 0.8)',
+        "Grains/Cereals": 'rgba(255, 159, 64, 0.8)',
+        "Meat/Poultry": 'rgba(255, 99, 71, 0.8)',
+        "Produce": 'rgba(34, 139, 34, 0.8)'
+    };
 
-                var categoryLabels = Object.keys(categoryColors);
-                var categorySalesData = [104976, 97048, 96814, 96777, 80753, 56465, 48545, 40505];
-                var totalSales = categorySalesData.reduce((a, b) => a + b, 0);
+    // 서버에서 전달된 카테고리별 총 매출 데이터를 사용 (숫자로 변환)
+    var categorySalesData = {{ category_sales_data | tojson | safe }};
+    var categoryLabels = categorySalesData.map(item => item.CategoryName);
+    var salesValues = categorySalesData.map(item => parseFloat(item.TotalSales));  // 문자열을 숫자로 변환
 
-                // 카테고리별 총 매출 차트
-                var ctxPie = document.getElementById("categorySalesPieChart").getContext("2d");
-                new Chart(ctxPie, {
-                    type: 'pie',
-                    data: {
-                        labels: categoryLabels,
-                        datasets: [{
-                            label: 'Category Sales',
-                            data: categorySalesData,
-                            backgroundColor: categoryLabels.map(label => categoryColors[label]), // 고정된 색상 사용
-                            borderColor: categoryLabels.map(label => categoryColors[label].replace('0.8', '1')), // 경계선 색상
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        var value = tooltipItem.raw;
-                                        var percentage = ((value / totalSales) * 100).toFixed(2);
-                                        return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
-                                    }
-                                }
-                            },
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    font: {
-                                        family: 'Arial'
-                                    }
-                                }
-                            }
+    var totalSales = salesValues.reduce((a, b) => a + b, 0);
+
+    // 카테고리별 총 매출 차트
+    var ctxPie = document.getElementById("categorySalesPieChart").getContext("2d");
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                label: 'Category Sales',
+                data: salesValues,  // 숫자로 변환된 매출 데이터
+                backgroundColor: categoryLabels.map(label => categoryColors[label]), // 고정된 색상 사용
+                borderColor: categoryLabels.map(label => categoryColors[label].replace('0.8', '1')), // 경계선 색상
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            var value = tooltipItem.raw;
+                            var percentage = ((value / totalSales) * 100).toFixed(2);
+                            return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
                         }
                     }
-                });
+                },
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            family: 'Arial'
+                        }
+                    }
+                }
+            }
+        }
+    });
 
-                // 월별 매출 차트 생성
-                var salesData = {{ sales_data | tojson }};
-                Object.keys(salesData).forEach(function(month) {
-                    var ctx = document.getElementById("chart-" + month);
-                    if (ctx) {
-                        var chartData = salesData[month].map(item => item.category_sales);
-                        var monthTotalSales = chartData.reduce((a, b) => a + b, 0);
+    // 월별 매출 차트 생성
+    var salesData = {{ sales_data | tojson | safe }};
+    Object.keys(salesData).forEach(function(month) {
+        var ctx = document.getElementById("chart-" + month);
+        if (ctx) {
+            var chartData = salesData[month].map(item => item.category_sales);
+            var monthTotalSales = chartData.reduce((a, b) => a + b, 0);
 
-                        new Chart(ctx.getContext("2d"), {
-                            type: 'pie',
-                            data: {
-                                labels: salesData[month].map(item => item.category),
-                                datasets: [{
-                                    data: chartData,
-                                    backgroundColor: salesData[month].map(item => categoryColors[item.category]), // 고정된 색상 사용
-                                    borderColor: salesData[month].map(item => categoryColors[item.category].replace('0.8', '1')), // 경계선 색상
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: false,
-                                plugins: {
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(tooltipItem) {
-                                                var value = tooltipItem.raw;
-                                                var percentage = ((value / monthTotalSales) * 100).toFixed(2);
-                                                return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        display: false
-                                    }
+            new Chart(ctx.getContext("2d"), {
+                type: 'pie',
+                data: {
+                    labels: salesData[month].map(item => item.category),
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: salesData[month].map(item => categoryColors[item.category]), // 고정된 색상 사용
+                        borderColor: salesData[month].map(item => categoryColors[item.category].replace('0.8', '1')), // 경계선 색상
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    var value = tooltipItem.raw;
+                                    var percentage = ((value / monthTotalSales) * 100).toFixed(2);
+                                    return tooltipItem.label + ': ' + value + ' USD (' + percentage + '%)';
                                 }
                             }
-                        });
+                        },
+                        legend: {
+                            display: false
+                        }
                     }
-                });
+                }
             });
+        }
+    });
+});
+
         </script>
     </body>
 </html>

@@ -9,9 +9,9 @@
 - **IDE**: PyCharm
 - **프레임워크**: Flask
 - **데이터베이스**: Mysql
-- **ORM**: MyBatis
+- **ORM**: SQLAlchemy
 - **버전 관리**: Git
-- **빌드 도구**: Maven
+- **빌드 도구**: pip
 
 ## 📌 주요 기능
 대시보드 주요 기능

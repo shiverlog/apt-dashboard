@@ -29,7 +29,7 @@
                                 </div>
                                 {% if chart_data %}
                                 <div class="card-body">
-                                    <canvas id="myAllLineCharts" width="100%" height="30"></canvas>
+                                    <canvas id="categoryMonthlySalesLineChart" width="100%" height="30"></canvas>
                                 </div>
                                 {% endif %}
                             </div>
@@ -43,7 +43,7 @@
 
         {% if chart_data %}
         <script>
-            var ctxArea = document.getElementById("myAllLineCharts").getContext("2d");
+            var ctxArea = document.getElementById("categoryMonthlySalesLineChart").getContext("2d");
 
             {% if selected_category == 'outlook' %}
             // 전체 카테고리 데이터를 시각화하는 경우

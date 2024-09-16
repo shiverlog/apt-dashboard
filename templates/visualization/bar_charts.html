@@ -7,7 +7,7 @@
             <div id="layoutSidenav_content">
             {% include 'fragment/sidebar.html' %}
                 <div class="container-lg">
-                    <h1>Bar Charts</h1>
+                    <h1>막대 차트(Bar Charts)</h1>
                     {# 막대 차트 #}
                     <div class="col-xl-12">
                         <div class="card mb-4">
@@ -61,11 +61,11 @@
         <!-- 파스텔 색상 생성 함수 -->
         <script>
             function getRandomPastelColor() {
-                // 파스텔 색상을 만들기 위한 RGB 범위를 밝은 쪽으로 제한
-                const r = Math.floor((Math.random() * 127) + 127);  // 127~255 범위의 밝은 색상
+
+                const r = Math.floor((Math.random() * 127) + 127);
                 const g = Math.floor((Math.random() * 127) + 127);
                 const b = Math.floor((Math.random() * 127) + 127);
-                return `rgba(${r}, ${g}, ${b}, 0.6)`;  // 알파값으로 부드러운 투명도 적용
+                return `rgba(${r}, ${g}, ${b}, 0.6)`;
             }
 
             // 직원별 처리한 주문 건수 차트
