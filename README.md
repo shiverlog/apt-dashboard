@@ -92,12 +92,13 @@ Leaflet.js를 사용하여 지리적 데이터를 시각화합니다. 이를 통
 ![img_1.png](readme/img_1.png)
 ### 주피터 노트북
 ![img_16.png](readme/img_16.png)
-## 🔗 링크 및 자료
+
 
 ---
 
 - **프로젝트 저장소**: [프로젝트 저장소](https://github.com/shiverlog/apt-dashboard)
 - **프로젝트 문서**: [구글 드라이브](https://drive.google.com/drive/folders/1Q6HXYuKRZ2r6MezJknDy-DD6fcuuhVdC)
 - **팀 노션**: [팀 노션](https://courageous-mango-380.notion.site/9d8cb228fada42b7a51e7cea4903f350?v=f9b8d723d3a04863a40a7a30f40180f2)
+- **Azure 배포**: [Azure](https://apt-dashboard-ebd2c6hudxa7htar.koreacentral-01.azurewebsites.net/)
 
 ---
